@@ -84,15 +84,17 @@ export default function ShoppingListScreen(){
 
             <Text style={styles.heading}>Shopping List</Text>
 
+            <Text style={styles.headingWelcomeText}>Welcome to The Shopping List</Text>
+
             <TextInput 
-            placeholder="Item name"
+            placeholder="Enter item name"
             value={name}
             onChangeText={setName}
             style={styles.input}
             />
 
             <TextInput 
-            placeholder="Quantity"
+            placeholder="Enter the quantity"
             value={quantity}
             onChangeText={setQuantity}
             style={styles.input}
@@ -120,42 +122,55 @@ export default function ShoppingListScreen(){
 }
 
 const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+    flex: 1,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: '700',
+    marginBottom: 12,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    borderRadius: 6,
+    padding: 10,
+    marginBottom: 8,
+  },
+  itemRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 6,
+  },
+  itemText: {
+    fontSize: 16,
+  },
+  purchasedText: {
+    textDecorationLine: 'line-through',
+    color: '#6B7280',
+  },
+  listContainer: {
+    paddingTop: 12,
+  },
+  emptyText: {
+    marginTop: 20,
+    fontStyle: 'italic',
+    color: '#6B7280',
+    textAlign: 'center',
+  },
 
-    container:{
-
-    },
-    heading:{
-
-    },
-    input:{
-
-    },
-
-    itemRow:{
-
-    },
-    itemText:{
-
-    },
-    purchasedText:{
-
-    },
-    listContainer:{
-
-    },
-    emptyList:{
-
-    },
-    deleteButton:{
-
-    },
-    deleteButtonText:{
-
-    },
-    emptyText:{
-
-    }
-
-
-
-})
+  // Optional style overrides for delete button
+  deleteButton: {
+    backgroundColor: '#FEE2E2', // soft red background
+  },
+  deleteButtonText: {
+    color: '#B91C1C', // darker red text
+  },
+  headingWelcomeText:{
+        fontSize: 12,
+    fontWeight: '500',
+    marginBottom: 12,
+  }
+});
