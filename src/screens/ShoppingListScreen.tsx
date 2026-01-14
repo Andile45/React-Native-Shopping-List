@@ -7,6 +7,7 @@ import { ShoppingItem } from "../types/shopping.types";
 import { PressableButton } from "../components/PressableButton";
 import { loadItems, saveItems } from "../utils/storage";
 
+type FilterType = 'all' | 'purchased' | 'unpurchased';
 
 export default function ShoppingListScreen(){
     const dispatch = useAppDispatch();
@@ -17,6 +18,8 @@ export default function ShoppingListScreen(){
     const [editingId, setEditingId] = useState<string| null>(null);
     const [editName,setEditName] = useState('');
     const [editQuantity,setEditQuantity] = useState('1'); 
+    const [seachQuery,setSearchQuery] = useState('');
+    const [filter, setFilter] = useState<FilterType>('all');
 
     // load saved Items once on mount 
     useEffect(()=>{
@@ -51,6 +54,21 @@ export default function ShoppingListScreen(){
         setName('');
         setQuantity('1');
     };
+
+
+    // Filter Logic 
+
+    const visibleItems = items.filter(item=>
+        item.name.toLocaleLowerCase()
+        .includes(seachQuery.toLocaleLowerCase()
+    )
+)
+    .filter(item =>{
+        if (filter ==='purchased') return item.purchased;
+        if(filter ==='unpurchased') return !item.purchased;
+        return true;
+    });
+    
 
 
     const renderItem = ({item}:{item:ShoppingItem})=>(
@@ -159,9 +177,41 @@ export default function ShoppingListScreen(){
             title="Add Item"
             onPress={handleAdd}
             />
+            
+            {/* Search Functionality */}
+
+            <TextInput 
+            placeholder="Seach Items..."
+            value={seachQuery}
+            onChangeText={setSearchQuery}
+            style={styles.input}
+            />
+
+            {/* Filter Functionality */}
+            <View style={styles.filterRow}>
+
+            <PressableButton 
+            title="All"
+            variant={filter === 'all' ? 'primary' :'secondary'}
+            onPress={()=>setFilter('all')}
+            />
+
+            <PressableButton
+             title="Purchased"
+             variant={filter ==='purchased' ? 'primary':'secondary'}
+             onPress={()=>setFilter('purchased')}
+            />
+
+            <PressableButton
+            title="Pending"
+            variant={filter==='unpurchased' ? 'primary':'secondary'}
+            onPress={()=>setFilter('unpurchased')}
+            />
+
+            </View>
 
             <FlatList
-             data={items}
+             data={visibleItems}
              keyExtractor={items => items.id}
              renderItem={renderItem}
              contentContainerStyle={styles.listContainer}
@@ -229,6 +279,17 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   editInput:{
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    padding: 6,
+    borderRadius: 6,
+    marginVertical: 4,
+
+  },
+  filterRow:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    marginVertical:8
 
   }
 });
