@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react"
 import {View, Text,StyleSheet,FlatList,Alert, TextInput} from "react-native"
 import {v4 as uuidv4} from 'uuid';
 import { useAppDispatch,useAppSelector } from "../hooks/redux";
-import { addItem,deleteItem,togglePurchased,setItems } from "../store/ShoppingListSlice";
+import { addItem,deleteItem,togglePurchased,setItems, editItem } from "../store/ShoppingListSlice";
 import { ShoppingItem } from "../types/shopping.types";
 import { PressableButton } from "../components/PressableButton";
 import { loadItems, saveItems } from "../utils/storage";
@@ -14,6 +14,9 @@ export default function ShoppingListScreen(){
 
     const [name,setName] = useState('');
     const [quantity, setQuantity] = useState('1');
+    const [editingId, setEditingId] = useState<string| null>(null);
+    const [editName,setEditName] = useState('');
+    const [editQuantity,setEditQuantity] = useState('1'); 
 
     // load saved Items once on mount 
     useEffect(()=>{
@@ -53,31 +56,83 @@ export default function ShoppingListScreen(){
     const renderItem = ({item}:{item:ShoppingItem})=>(
         <View style={styles.itemRow}>
             {/* Tapping the text toggles purchased State */}
-            <Text
-            onPress={()=>dispatch(togglePurchased(item.id))}
-            style={[
-                styles.itemText, 
-                item.purchased && styles.purchasedText,
-            ]}
-            accessibilityRole="checkbox"
-            accessibilityState={{checked:item.purchased}}
-            >
-                {item.name} ({item.quantity})
 
-            </Text>
+            {/* Editing Functionality */}
 
-            {/* Secondary or Danger style delete Button  */}
+            {
+                editingId === item.id ? (
+                    <>
+                    <TextInput
+                      value={editName}
+                      onChangeText={setEditName}
+                      style={styles.editInput}
+                    />
+                    <TextInput
+                    value={editQuantity}
+                    onChangeText={setEditQuantity}
+                    style={styles.editInput}
+                    />
 
-            <PressableButton
-               title="Delete"
-               variant="secondary"
-               onPress={()=>dispatch(deleteItem(item.id))}
-               style={styles.deleteButton}
-               textStyle={styles.deleteButtonText}
-               accessibilityLabel={`Delete ${item.name}`}
-            />
+                    <PressableButton
+                    title="Save"
+                    onPress={()=>{
+                        dispatch(
+                            editItem({
+                                id:item.id,
+                                name:editName,
+                                quantity:Number(editQuantity)
+                            })
+                        );
+                        setEditingId(null);
+                    }}
+                    />
+                    </>
+                ):(
+                    <>
+
+                    <Text
+                    onPress={()=>dispatch(togglePurchased(item.id))}
+                    style={[
+                        styles.itemText, 
+                        item.purchased && styles.purchasedText,
+                    ]}
+                    accessibilityRole="checkbox"
+                    accessibilityState={{checked:item.purchased}}
+                    >
+                        {item.name} ({item.quantity})
+                    </Text>
+
+                    {/* Edit Button  */}
+
+                    <PressableButton 
+                     title="Edit"
+                     variant="secondary"
+                     onPress={()=>{
+                        setEditName(item.id);
+                        setEditName(item.name);
+                        setEditQuantity(String(item.quantity));
+                     }}
+                    
+                    />
+
+
+                    {/* Secondary or Danger style delete Button  */}
+
+                    <PressableButton
+                       title="Delete"
+                       variant="secondary"
+                       onPress={()=>dispatch(deleteItem(item.id))}
+                       style={styles.deleteButton}
+                       textStyle={styles.deleteButtonText}
+                       accessibilityLabel={`Delete ${item.name}`}
+                    />
+                    </>
+                )
+            }
         </View>
     );
+
+
 
     return(
         <View style={styles.container}>
@@ -172,5 +227,8 @@ const styles = StyleSheet.create({
         fontSize: 12,
     fontWeight: '500',
     marginBottom: 12,
+  },
+  editInput:{
+
   }
 });
