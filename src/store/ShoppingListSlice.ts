@@ -20,7 +20,7 @@ const shoppingListSlice = createSlice({
                 if (item) item.purchased =!item.purchased
         },
 
-       editItem:(state,action:PayloadAction<{id:string,name:string,quantity:number,desription:string}>)=>{
+       editItem:(state,action:PayloadAction<{id:string,name:string,quantity:number}>)=>{
             const item = state.find(i => i.id === action.payload.id);
 
             if (item) {
