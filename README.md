@@ -1,50 +1,206 @@
-# Welcome to your Expo app 👋
+# 🛒 React Native Shopping List
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A modern, feature-rich shopping list application built with React Native and Expo. Manage your shopping items with ease, track purchases, and keep your list organized.
 
-## Get started
+## ✨ Features
 
-1. Install dependencies
+- **Add Items**: Quickly add shopping items with name and quantity
+- **Edit Items**: Inline editing for item names and quantities
+- **Delete Items**: Remove items from your list
+- **Toggle Purchase Status**: Mark items as purchased/unpurchased with a switch
+- **Search Functionality**: Search items by name (case-insensitive)
+- **Filter Options**: View all items, purchased items, or pending items
+- **Persistent Storage**: Your shopping list is automatically saved and restored using AsyncStorage
+- **Modern UI**: Clean, intuitive interface with modal dialogs and floating action button
+- **Visual Feedback**: Purchased items are displayed with strikethrough text
 
+## 🛠️ Tech Stack
+
+- **React Native** - Cross-platform mobile framework
+- **Expo** - Development platform and tooling
+- **Expo Router** - File-based routing system
+- **Redux Toolkit** - State management
+- **TypeScript** - Type-safe development
+- **AsyncStorage** - Local data persistence
+- **React Native Gesture Handler** - Smooth interactions
+
+## 📋 Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- [Node.js](https://nodejs.org/) (v18 or higher)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/) (optional, but recommended)
+- [Expo Go](https://expo.dev/client) app on your iOS/Android device (for testing)
+
+## 🚀 Getting Started
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/React-Native-Shopping-List.git
+   cd React-Native-Shopping-List
+   ```
+
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. Start the development server:
    ```bash
+   npm start
+   # or
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+### Running the App
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+After starting the development server, you can run the app on:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **iOS Simulator**: Press `i` in the terminal or run `npm run ios`
+- **Android Emulator**: Press `a` in the terminal or run `npm run android`
+- **Web Browser**: Press `w` in the terminal or run `npm run web`
+- **Physical Device**: Scan the QR code with Expo Go app (iOS) or Camera app (Android)
 
-## Get a fresh project
+## 📱 Usage
 
-When you're ready, run:
+### Adding Items
 
-```bash
-npm run reset-project
+1. Tap the **+** floating action button at the bottom right
+2. Enter the item name
+3. Enter the quantity (default: 1)
+4. Tap "Add Item" to save
+
+### Editing Items
+
+1. Tap the **"Edit"** button on any item
+2. Modify the name or quantity in the text fields
+3. Tap **"Save"** to update the item
+
+### Marking Items as Purchased
+
+- Toggle the switch next to any item to mark it as purchased/unpurchased
+- Purchased items are displayed with strikethrough text
+
+### Searching Items
+
+- Type in the search bar at the top to filter items by name
+- Search is case-insensitive and updates in real-time
+
+### Filtering Items
+
+Use the filter buttons to view:
+- **All**: Show all items
+- **Purchased**: Show only purchased items
+- **Pending**: Show only unpurchased items
+
+### Deleting Items
+
+- Tap the **"Delete"** button on any item to remove it from the list
+
+## 📁 Project Structure
+
+```
+React-Native-Shopping-List/
+├── app/                    # Expo Router pages
+│   ├── _layout.tsx        # Root layout with Redux Provider
+│   └── index.tsx          # Main entry point
+├── src/
+│   ├── components/        # Reusable components
+│   │   └── PressableButton.tsx
+│   ├── hooks/            # Custom React hooks
+│   │   └── redux.ts      # Typed Redux hooks
+│   ├── screens/          # Screen components
+│   │   └── ShoppingListScreen.tsx
+│   ├── store/            # Redux store configuration
+│   │   ├── index.ts      # Store setup
+│   │   └── ShoppingListSlice.ts  # Redux slice
+│   ├── types/            # TypeScript type definitions
+│   │   └── shopping.types.ts
+│   └── utils/            # Utility functions
+│       └── storage.ts    # AsyncStorage helpers
+├── assets/               # Images and static assets
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 🔧 Available Scripts
 
-## Learn more
+- `npm start` - Start the Expo development server
+- `npm run android` - Run on Android emulator/device
+- `npm run ios` - Run on iOS simulator/device
+- `npm run web` - Run in web browser
+- `npm run lint` - Run ESLint to check code quality
 
-To learn more about developing your project with Expo, look at the following resources:
+## 🏗️ Architecture
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### State Management
 
-## Join the community
+The app uses **Redux Toolkit** for state management:
 
-Join our community of developers creating universal apps.
+- **Store**: Configured in `src/store/index.ts`
+- **Slice**: Shopping list state and actions in `src/store/ShoppingListSlice.ts`
+- **Actions**: `addItem`, `deleteItem`, `togglePurchased`, `editItem`, `setItems`
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Data Persistence
+
+- Items are automatically saved to **AsyncStorage** whenever the list changes
+- Items are loaded from storage when the app starts
+- Storage key: `SHOPPING_LIST`
+
+### Routing
+
+- Uses **Expo Router** for file-based routing
+- Main screen is defined in `app/index.tsx`
+
+## 🎨 UI Components
+
+### PressableButton
+
+A reusable button component with:
+- Primary and secondary variants
+- Press state animations
+- Disabled state support
+- Custom styling options
+
+## 📝 Type Definitions
+
+```typescript
+interface ShoppingItem {
+  id: string;
+  name: string;
+  quantity: number;
+  purchased: boolean;
+}
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 🙏 Acknowledgments
+
+- Built with [Expo](https://expo.dev/)
+- State management with [Redux Toolkit](https://redux-toolkit.js.org/)
+- Icons and UI components from React Native
+
+## 📞 Support
+
+If you have any questions or issues, please open an issue on GitHub.
+
+---
+
+Made with ❤️ using React Native and Expo
