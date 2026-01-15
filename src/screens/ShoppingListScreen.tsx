@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react"
-import { View, Text, StyleSheet, FlatList, Alert, TextInput } from "react-native"
+import { View, Text, StyleSheet, FlatList, Alert, TextInput,Modal,KeyboardAvoidingView,Platform,Pressable ,Switch} from "react-native"
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { addItem, deleteItem, togglePurchased, setItems, editItem } from "../store/ShoppingListSlice";
 import { ShoppingItem } from "../types/shopping.types";
 import { PressableButton } from "../components/PressableButton";
 import { loadItems, saveItems } from "../utils/storage";
+
 
 type FilterType = 'all' | 'purchased' | 'unpurchased';
 
@@ -20,6 +21,7 @@ export default function ShoppingListScreen() {
     const [editQuantity, setEditQuantity] = useState('1');
     const [seachQuery, setSearchQuery] = useState('');
     const [filter, setFilter] = useState<FilterType>('all');
+    const [isModalVisible,setIsModalVisible] =useState(false);
 
     // load saved Items once on mount 
     useEffect(() => {
@@ -108,20 +110,30 @@ export default function ShoppingListScreen() {
                 ) : (
                     <>
 
-                        <View style={styles.itemTextContainer}>
-                            <Text
-                                onPress={() => dispatch(togglePurchased(item.id))}
-                                style={[
-                                    styles.itemName,
-                                    item.purchased && styles.purchasedText,
-                                ]}
-                            >
-                                {item.name}
-                            </Text>
+                        <View style={styles.itemRow}>
 
-                            <Text style={styles.itemQuantity}>
-                                Quantity: {item.quantity}
-                            </Text>
+                            {/* Left :Name + Quantity  */}
+
+                            <View style={styles.itemTextContainer}>
+
+                                <Text style={[
+                                    styles.itemName,
+                                    item.purchased && styles.purchasedText
+                                ]}>
+                                  {item.name}
+                                </Text>
+
+                                <Text style={styles.itemQuantity}>
+                                   Quality : {item.quantity}
+                                </Text>
+
+                            </View>
+
+                            <Switch 
+                            value={item.purchased}
+                            onValueChange={(_value:boolean) =>{dispatch(togglePurchased(item.id))} }
+                            />
+
                         </View>
 
                         {/* Edit Button  */}
@@ -163,24 +175,54 @@ export default function ShoppingListScreen() {
 
             <Text style={styles.headingWelcomeText}>Welcome to The Shopping List</Text>
 
-            <TextInput
-                placeholder="Enter item name"
-                value={name}
-                onChangeText={setName}
-                style={styles.input}
-            />
+  
+ 
+            {/* Add new Item Modal */}
 
-            <TextInput
-                placeholder="Enter the quantity"
-                value={quantity}
-                onChangeText={setQuantity}
-                style={styles.input}
-            />
+            <Modal
+                visible={isModalVisible}
+                animationType="slide"
+                transparent
+            >
+                <View style={styles.modalOverlay}>
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === "ios" ? "padding" : undefined}
+                        style={styles.modalContainer}
+                    >
+                        <Text style={styles.modalTitle}>Add New Item</Text>
 
-            <PressableButton
-                title="Add Item"
-                onPress={handleAdd}
-            />
+                        <TextInput
+                            placeholder="Item name"
+                            value={name}
+                            onChangeText={setName}
+                            style={styles.input}
+                        />
+
+                        <TextInput
+                            placeholder="Quantity"
+                            value={quantity}
+                            onChangeText={setQuantity}
+                            keyboardType="numeric"
+                            style={styles.input}
+                        />
+
+                        <PressableButton
+                            title="Add Item"
+                            onPress={() => {
+                                handleAdd();
+                                setIsModalVisible(false);
+                            }}
+                        />
+
+                        <PressableButton
+                            title="Cancel"
+                            variant="secondary"
+                            onPress={() => setIsModalVisible(false)}
+                        />
+                    </KeyboardAvoidingView>
+                </View>
+            </Modal>
+
 
             {/* Search Functionality */}
 
@@ -225,6 +267,13 @@ export default function ShoppingListScreen() {
                     </Text>
                 }
             />
+            <Pressable
+                style={styles.floatingButton}
+                onPress={() => setIsModalVisible(true)}
+            >
+                <Text style={styles.floatingButtonText}>＋</Text>
+            </Pressable>
+
         </View>
     )
 
@@ -331,8 +380,49 @@ const styles = StyleSheet.create({
         color: '#6B7280',
         marginTop: 2,
     },
+    modalOverlay:{
+         flex:1,
+         backgroundColor:'rgba(0,0,0,0.3)',
+         justifyContent:'flex-end'
+    },
+
+    modalContainer: {
+        backgroundColor: '#FFFFFF',
+        padding: 20,
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16,
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: '700',
+        marginBottom: 12,
+    },
+    floatingButton: {
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        backgroundColor: '#111827',
+        width: 56,
+        height: 56,
+        borderRadius: 28,
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 5,
+    },
+
+    floatingButtonText: {
+        color: '#FFFFFF',
+        fontSize: 28,
+        fontWeight: '600',
+    },
+    itemRowTop: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
 
 
 
 
 });
+
