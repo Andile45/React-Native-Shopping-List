@@ -124,7 +124,7 @@ export default function ShoppingListScreen() {
                                 </Text>
 
                                 <Text style={styles.itemQuantity}>
-                                   Quality : {item.quantity}
+                                   Quantity : {item.quantity}
                                 </Text>
 
                             </View>
@@ -263,7 +263,11 @@ export default function ShoppingListScreen() {
                 contentContainerStyle={styles.listContainer}
                 ListEmptyComponent={
                     <Text style={styles.emptyText}>
-                        No Items yet , Add Your First Item
+                        Your list is empty! {'\n'}
+                        Start by adding your first item and make your shopping easier
+
+                        {'\n'}{'\n'}
+                        Click the (+) to start
                     </Text>
                 }
             />
@@ -317,6 +321,8 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
         color: '#6B7280',
         textAlign: 'center',
+        fontSize:20,
+        marginHorizontal:10
     },
 
     // Custom style overrides for delete button
@@ -327,7 +333,7 @@ const styles = StyleSheet.create({
         color: '#B91C1C',
     },
     headingWelcomeText: {
-        fontSize: 12,
+        fontSize: 13,
         fontWeight: '500',
         marginBottom: 12,
     },
